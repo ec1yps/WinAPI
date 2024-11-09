@@ -1,4 +1,4 @@
-#define _CRT_SECURE_NO_WARNINGS
+﻿#define _CRT_SECURE_NO_WARNINGS
 #include <Windows.h>
 #include <stdio.h>
 #include<iostream>
@@ -33,35 +33,25 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 		return 0;
 	}
 
+	INT screen_width = GetSystemMetrics(SM_CXSCREEN);
+	INT screen_height = GetSystemMetrics(SM_CYSCREEN);
+
+	INT window_width = screen_width * .75;
+	INT window_height = screen_height * .75;
+
+	INT window_start_x = screen_width / 8;
+	INT window_start_y = screen_height / 8;
+
 	HWND hwnd = CreateWindowEx
 	(
 		NULL,
 		g_sz_MY_WINDOW_CLASS,
 		g_sz_MY_WINDOW_CLASS,
 		WS_OVERLAPPEDWINDOW,
-		CW_USEDEFAULT, CW_USEDEFAULT,
-		CW_USEDEFAULT, CW_USEDEFAULT,
+		window_start_x, window_start_y,
+		window_width, window_height,
 		NULL, NULL, hInstance, NULL
 	);
-
-	RECT window;
-	RECT screen;
-
-	GetWindowRect(hwnd, &window);
-	GetWindowRect(GetDesktopWindow(), &screen);
-
-	INT sizeX = (screen.right - screen.left) * 0.75;
-	INT sizeY = (screen.bottom - screen.top) * 0.75;
-
-	SetWindowPos(hwnd, NULL, 0, 0, sizeX, sizeY, SWP_NOMOVE);
-
-	GetWindowRect(hwnd, &window);
-	GetWindowRect(GetDesktopWindow(), &screen);
-
-	INT X = (screen.right - screen.left - (window.right - window.left)) / 2;
-	INT Y = (screen.bottom - screen.top - (window.bottom - window.top)) / 2;
-
-	SetWindowPos(hwnd, NULL, X, Y, 0, 0, SWP_NOSIZE);
 
 	ShowWindow(hwnd, nCmdShow);
 	UpdateWindow(hwnd);
