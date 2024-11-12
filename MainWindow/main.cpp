@@ -18,12 +18,13 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 	wc.cbClsExtra = 0;
 	wc.cbWndExtra = 0;
 
-	//wc.hIcon = (HICON)LoadImage(hInstance, "bitcoin.ico", IMAGE_ICON, LR_DEFAULTSIZE, LR_DEFAULTSIZE, LR_LOADFROMFILE);		//Загрузка значка файлом
-	//wc.hIconSm = (HICON)LoadImage(hInstance, "3dbitcoin.ico", IMAGE_ICON, LR_DEFAULTSIZE, LR_DEFAULTSIZE, LR_LOADFROMFILE);	//Загрузка значка файлом
-	wc.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON2));		//Загрузка значка через ресурсы
-	wc.hIconSm = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON1));	//Загрузка значка через ресурсы
+	//wc.hIcon = (HICON)LoadImage(hInstance, "ico\\bitcoin.ico", IMAGE_ICON, LR_DEFAULTSIZE, LR_DEFAULTSIZE, LR_LOADFROMFILE);		//Загрузка значка файлом
+	//wc.hIconSm = (HICON)LoadImage(hInstance, "ico\\3dbitcoin.ico", IMAGE_ICON, LR_DEFAULTSIZE, LR_DEFAULTSIZE, LR_LOADFROMFILE);	//Загрузка значка файлом
+	wc.hIcon = LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_ICON2));		//Загрузка значка через ресурсы
+	wc.hIconSm = LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_ICON1));	//Загрузка значка через ресурсы
 	//wc.hCursor = LoadCursor(hInstance, MAKEINTRESOURCE(IDC_CURSOR1));	//Нарисованный курсор
-	wc.hCursor = LoadCursorFromFile("Flappy Bird Animated--cursor--SweezyCursors.ani"); //Анимированный курсор
+	//wc.hCursor = LoadCursorFromFile("Flappy Bird Animated--cursor--SweezyCursors.ani"); //Анимированный курсор
+	wc.hCursor = (HCURSOR)LoadImage(hInstance, "cursors\\starcraft-original\\Working In Background.ani", IMAGE_CURSOR, LR_DEFAULTSIZE, LR_DEFAULTSIZE, LR_LOADFROMFILE);
 	wc.hbrBackground = (HBRUSH)COLOR_WINDOW;
 
 	wc.hInstance = hInstance;
