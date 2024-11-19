@@ -185,6 +185,11 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		);
 	}
 	break;
+	case WM_KEYDOWN:
+	{
+		if (wParam >= VK_0 && wParam <= VK_9)
+			wParam = wParam - VK_0 + IDC_BUTTON_0;
+	}
 	case WM_COMMAND:
 	{
 		CONST INT SIZE = 256;
