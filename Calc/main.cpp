@@ -127,6 +127,7 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			hwnd, (HMENU)IDC_EDIT_DISPLAY,
 			GetModuleHandle(NULL), NULL
 		);
+		AddFontResource("Font\\GROBOLDoutline.ttf");
 		HFONT hFont = CreateFont
 		(
 			15, 5, 0, 0,
@@ -139,7 +140,7 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			CLIP_DEFAULT_PRECIS,
 			DEFAULT_QUALITY,
 			DEFAULT_PITCH,
-			"Font\\GROBOLDoutline.ttf"
+			"GROBOLDoutline"
 			//"Verdana"
 		);
 		SendMessage(hEdit, WM_SETFONT, (WPARAM)hFont, TRUE);
