@@ -73,7 +73,7 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			break;
 		case IDC_BUTTON_ROOT:
 			break;
-		case IDC_BUTTON_CLEAR:
+		case IDC_BUTTON_CLR:
 			break;
 		case IDC_BUTTON_DELETE:
 			break;

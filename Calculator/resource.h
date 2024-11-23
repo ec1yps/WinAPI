@@ -26,7 +26,7 @@
 #define IDC_BUTTON_POWER                1020
 #define IDC_BUTTON_ROOT                 1021
 #define IDC_BUTTON_DIVISION             1022
-#define IDC_BUTTON_CLEAR                1023
+#define IDC_BUTTON_CLR                1023
 #define IDC_BUTTON_DELETE               1024
 
 // Next default values for new objects
