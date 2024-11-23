@@ -10,7 +10,7 @@ CONST INT g_i_BUTTON_SIZE = 50;
 CONST INT g_i_BUTTON_DOUBLE_SIZE = g_i_BUTTON_SIZE * 2 + g_i_INTERVAL;
 
 CONST INT g_i_DISPLAY_WIDTH = g_i_BUTTON_SIZE * 5 + g_i_INTERVAL * 4;
-CONST INT g_i_DISPLAY_HEIGHT = 22;
+CONST INT g_i_DISPLAY_HEIGHT = 40;
 
 CONST INT g_i_START_X = 10;
 CONST INT g_i_START_Y = 10;
@@ -130,7 +130,7 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		AddFontResource("Font\\GROBOLDoutline.ttf");
 		HFONT hFont = CreateFont
 		(
-			15, 5, 0, 0,
+			g_i_DISPLAY_HEIGHT - 4, 8, 0, 0,
 			FW_NORMAL,
 			FALSE,
 			FALSE,
