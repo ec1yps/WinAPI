@@ -127,6 +127,22 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			hwnd, (HMENU)IDC_EDIT_DISPLAY,
 			GetModuleHandle(NULL), NULL
 		);
+		HFONT hFont = CreateFont
+		(
+			15, 5, 0, 0,
+			FW_NORMAL,
+			FALSE,
+			FALSE,
+			FALSE,
+			DEFAULT_CHARSET,
+			OUT_DEFAULT_PRECIS,
+			CLIP_DEFAULT_PRECIS,
+			DEFAULT_QUALITY,
+			DEFAULT_PITCH,
+			"Font\\GROBOLDoutline.ttf"
+			//"Verdana"
+		);
+		SendMessage(hEdit, WM_SETFONT, (WPARAM)hFont, TRUE);
 
 		CHAR sz_digit[2] = "0";
 		for (int i = 6; i >= 0; i -= 3)
