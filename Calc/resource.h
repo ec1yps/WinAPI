@@ -26,8 +26,11 @@
 #define IDC_BUTTON_SLASH				1014
 
 #define IDC_BUTTON_BSP					1015
-#define IDC_BUTTON_CLR				1016
+#define IDC_BUTTON_CLR					1016
 #define IDC_BUTTON_EQUAL				1017
+
+#define ID_SQUARE_BLUE_STYLE			1018
+#define ID_METAL_MISTRAL_STYLE			1019
 
 // Next default values for new objects
 // 

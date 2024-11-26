@@ -49,7 +49,7 @@ CONST CHAR* g_BUTTONS_IMAGES[] =
 VOID load_button_image(HWND hButton, INT index);
 
 CHAR* GetFileName(CHAR* resource);
-VOID SetSkin(HWND hwnd, CONST CHAR* skin);
+VOID SetSkin(HWND hwnd, CONST CHAR* skin, CONST CHAR* font);
 
 INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -260,7 +260,17 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		);
 		//SendMessage(hButtonEqual, BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)hBitmapEqual);
 
-		SetSkin(hwnd, "square_blue");
+		SetSkin(hwnd, "square_blue", "GROBOLDoutline");
+	}
+	break;
+	case WM_CONTEXTMENU:
+	{
+		HMENU hMenu = CreatePopupMenu();
+		POINT cursor;
+		GetCursorPos(&cursor);
+		AppendMenu(hMenu, MFT_STRING, ID_SQUARE_BLUE_STYLE, "square_blue style");
+		AppendMenu(hMenu, MFT_STRING, ID_METAL_MISTRAL_STYLE, "metal_mistral style");
+		TrackPopupMenu(hMenu, TPM_RIGHTBUTTON, cursor.x, cursor.y, 0, hwnd, NULL);
 	}
 	break;
 	case WM_COMMAND:
@@ -348,6 +358,48 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			if (a == DBL_MIN) strcpy(sz_display, "0");
 			else sprintf(sz_display, "%g", a);
 			SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)sz_display);
+		}
+
+		if (LOWORD(wParam) == ID_SQUARE_BLUE_STYLE)
+		{
+			/*AddFontResource("Font\\GROBOLDoutline.ttf");
+			HFONT hFont = CreateFont
+			(
+				g_i_DISPLAY_HEIGHT - 4, 8, 0, 0,
+				FW_NORMAL,
+				FALSE,
+				FALSE,
+				FALSE,
+				DEFAULT_CHARSET,
+				OUT_DEFAULT_PRECIS,
+				CLIP_DEFAULT_PRECIS,
+				DEFAULT_QUALITY,
+				DEFAULT_PITCH,
+				"GROBOLDoutline"
+			);
+			SendMessage(hEditDisplay, WM_SETFONT, (WPARAM)hFont, TRUE);*/
+			SetSkin(hwnd, "square_blue", "GROBOLDoutline");
+		}
+		
+		if (LOWORD(wParam) == ID_METAL_MISTRAL_STYLE)
+		{
+			/*AddFontResource("Font\\HandWriting.otf");
+			HFONT hFont = CreateFont
+			(
+				g_i_DISPLAY_HEIGHT - 8, 10, 0, 0,
+				FW_NORMAL,
+				FALSE,
+				FALSE,
+				FALSE,
+				DEFAULT_CHARSET,
+				OUT_DEFAULT_PRECIS,
+				CLIP_DEFAULT_PRECIS,
+				DEFAULT_QUALITY,
+				DEFAULT_PITCH,
+				"HandWriting"
+			);
+			SendMessage(hEditDisplay, WM_SETFONT, (WPARAM)hFont, TRUE);*/
+			SetSkin(hwnd, "metal_mistral", "HandWriting");
 		}
 
 		SetFocus(hwnd);
@@ -451,11 +503,12 @@ CONST CHAR* g_BUTTON_FILENAME[] =
 "button_equal",
 };
 
-VOID SetSkin(HWND hwnd, CONST CHAR* skin)
+VOID SetSkin(HWND hwnd, CONST CHAR* skin, CONST CHAR* font)
 {
 	CHAR sz_path[MAX_PATH]{};
 	CHAR sz_filename[FILENAME_MAX]{};
 	CHAR sz_full_name[MAX_PATH]{};
+
 	for (int i = 0; i < 18; i++)
 	{
 		HWND hButton = GetDlgItem(hwnd, IDC_BUTTON_0 + i);
@@ -472,4 +525,23 @@ VOID SetSkin(HWND hwnd, CONST CHAR* skin)
 		);
 		SendMessage(hButton, BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)bmpButton);
 	}
+
+	HWND hEditDisplay = GetDlgItem(hwnd, IDC_EDIT_DISPLAY);
+	sprintf(sz_filename, "Font\\%s.ttf", font);
+	AddFontResource(sz_filename);
+	HFONT hFont = CreateFont
+	(
+		g_i_DISPLAY_HEIGHT - 4, 10, 0, 0,
+		FW_NORMAL,
+		FALSE,
+		FALSE,
+		FALSE,
+		DEFAULT_CHARSET,
+		OUT_DEFAULT_PRECIS,
+		CLIP_DEFAULT_PRECIS,
+		DEFAULT_QUALITY,
+		DEFAULT_PITCH,
+		font
+	);
+	SendMessage(hEditDisplay, WM_SETFONT, (WPARAM)hFont, TRUE);
 }
