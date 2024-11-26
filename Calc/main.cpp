@@ -263,16 +263,6 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		SetSkin(hwnd, "square_blue", "GROBOLDoutline");
 	}
 	break;
-	case WM_CONTEXTMENU:
-	{
-		HMENU hMenu = CreatePopupMenu();
-		POINT cursor;
-		GetCursorPos(&cursor);
-		AppendMenu(hMenu, MFT_STRING, ID_SQUARE_BLUE_STYLE, "square_blue style");
-		AppendMenu(hMenu, MFT_STRING, ID_METAL_MISTRAL_STYLE, "metal_mistral style");
-		TrackPopupMenu(hMenu, TPM_RIGHTBUTTON, cursor.x, cursor.y, 0, hwnd, NULL);
-	}
-	break;
 	case WM_COMMAND:
 	{
 		CONST INT SIZE = 256;
@@ -360,47 +350,47 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)sz_display);
 		}
 
-		if (LOWORD(wParam) == ID_SQUARE_BLUE_STYLE)
-		{
-			/*AddFontResource("Font\\GROBOLDoutline.ttf");
-			HFONT hFont = CreateFont
-			(
-				g_i_DISPLAY_HEIGHT - 4, 8, 0, 0,
-				FW_NORMAL,
-				FALSE,
-				FALSE,
-				FALSE,
-				DEFAULT_CHARSET,
-				OUT_DEFAULT_PRECIS,
-				CLIP_DEFAULT_PRECIS,
-				DEFAULT_QUALITY,
-				DEFAULT_PITCH,
-				"GROBOLDoutline"
-			);
-			SendMessage(hEditDisplay, WM_SETFONT, (WPARAM)hFont, TRUE);*/
-			SetSkin(hwnd, "square_blue", "GROBOLDoutline");
-		}
+		//if (LOWORD(wParam) == IDR_SQUARE_BLUE)
+		//{
+		//	/*AddFontResource("Font\\GROBOLDoutline.ttf");
+		//	HFONT hFont = CreateFont
+		//	(
+		//		g_i_DISPLAY_HEIGHT - 4, 8, 0, 0,
+		//		FW_NORMAL,
+		//		FALSE,
+		//		FALSE,
+		//		FALSE,
+		//		DEFAULT_CHARSET,
+		//		OUT_DEFAULT_PRECIS,
+		//		CLIP_DEFAULT_PRECIS,
+		//		DEFAULT_QUALITY,
+		//		DEFAULT_PITCH,
+		//		"GROBOLDoutline"
+		//	);
+		//	SendMessage(hEditDisplay, WM_SETFONT, (WPARAM)hFont, TRUE);*/
+		//	SetSkin(hwnd, "square_blue", "GROBOLDoutline");
+		//}
 		
-		if (LOWORD(wParam) == ID_METAL_MISTRAL_STYLE)
-		{
-			/*AddFontResource("Font\\HandWriting.otf");
-			HFONT hFont = CreateFont
-			(
-				g_i_DISPLAY_HEIGHT - 8, 10, 0, 0,
-				FW_NORMAL,
-				FALSE,
-				FALSE,
-				FALSE,
-				DEFAULT_CHARSET,
-				OUT_DEFAULT_PRECIS,
-				CLIP_DEFAULT_PRECIS,
-				DEFAULT_QUALITY,
-				DEFAULT_PITCH,
-				"HandWriting"
-			);
-			SendMessage(hEditDisplay, WM_SETFONT, (WPARAM)hFont, TRUE);*/
-			SetSkin(hwnd, "metal_mistral", "HandWriting");
-		}
+		//if (LOWORD(wParam) == IDR_METAL_MISTRAL)
+		//{
+		//	/*AddFontResource("Font\\HandWriting.otf");
+		//	HFONT hFont = CreateFont
+		//	(
+		//		g_i_DISPLAY_HEIGHT - 8, 10, 0, 0,
+		//		FW_NORMAL,
+		//		FALSE,
+		//		FALSE,
+		//		FALSE,
+		//		DEFAULT_CHARSET,
+		//		OUT_DEFAULT_PRECIS,
+		//		CLIP_DEFAULT_PRECIS,
+		//		DEFAULT_QUALITY,
+		//		DEFAULT_PITCH,
+		//		"HandWriting"
+		//	);
+		//	SendMessage(hEditDisplay, WM_SETFONT, (WPARAM)hFont, TRUE);*/
+		//	SetSkin(hwnd, "metal_mistral", "HandWriting");
+		//}
 
 		SetFocus(hwnd);
 	}
@@ -450,6 +440,34 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			SendMessage(hwnd, WM_COMMAND, LOWORD(IDC_BUTTON_SLASH), 0);
 			break;
 		}
+	}
+	break;
+	case WM_CONTEXTMENU:
+	{
+		HMENU hMenu = CreatePopupMenu();
+		HMENU hSubmenuSkins = CreatePopupMenu();
+		/*POINT cursor;
+		GetCursorPos(&cursor);
+		AppendMenu(hMenu, MFT_STRING, IDR_SQUARE_BLUE, "square_blue style");
+		AppendMenu(hMenu, MFT_STRING, IDR_METAL_MISTRAL, "metal_mistral style");
+		TrackPopupMenu(hMenu, TPM_RIGHTBUTTON, cursor.x, cursor.y, 0, hwnd, NULL);*/
+
+		InsertMenu(hSubmenuSkins, 0, MF_BYPOSITION | MF_STRING, IDR_METAL_MISTRAL, "Metal Mistral");
+		InsertMenu(hSubmenuSkins, 0, MF_BYPOSITION | MF_STRING, IDR_SQUARE_BLUE, "Square Blue");
+
+		InsertMenu(hMenu, 0, MF_BYPOSITION | MF_POPUP, (UINT_PTR)hSubmenuSkins, "Skins");
+		InsertMenu(hMenu, 1, MF_BYPOSITION | MF_SEPARATOR, 0, 0);
+		InsertMenu(hMenu, 2, MF_BYPOSITION | MF_STRING, IDR_EXIT, "Exit");
+
+		switch (TrackPopupMenu(hMenu, TPM_LEFTALIGN | TPM_BOTTOMALIGN | TPM_RETURNCMD, LOWORD(lParam), HIWORD(lParam), 0, hwnd, NULL))
+		{
+		case (IDR_SQUARE_BLUE): SetSkin(hwnd, "square_blue", "GROBOLDoutline"); break;
+		case (IDR_METAL_MISTRAL): SetSkin(hwnd, "metal_mistral", "HandWriting"); break;
+		case(IDR_EXIT): DestroyWindow(hwnd);
+		}
+
+		DestroyMenu(hSubmenuSkins);
+		DestroyMenu(hMenu);
 	}
 	break;
 	case WM_DESTROY:

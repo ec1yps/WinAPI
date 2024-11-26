@@ -4,6 +4,13 @@
 //
 #define IDI_ICON1                       101
 
+#define IDR_CONTEXT_MENU				200
+
+#define IDR_SQUARE_BLUE					201
+#define IDR_METAL_MISTRAL				202
+
+#define IDR_EXIT						210
+
 #define IDC_EDIT_DISPLAY				999
 
 #define IDC_BUTTON_0					1000
@@ -29,8 +36,7 @@
 #define IDC_BUTTON_CLR					1016
 #define IDC_BUTTON_EQUAL				1017
 
-#define ID_SQUARE_BLUE_STYLE			1018
-#define ID_METAL_MISTRAL_STYLE			1019
+
 
 // Next default values for new objects
 // 
