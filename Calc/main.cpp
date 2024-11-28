@@ -9,8 +9,11 @@ CONST INT g_i_INTERVAL = 5;
 CONST INT g_i_BUTTON_SIZE = 50;
 CONST INT g_i_BUTTON_DOUBLE_SIZE = g_i_BUTTON_SIZE * 2 + g_i_INTERVAL;
 
+CONST INT  g_i_FONT_HEIGH = 32;
+CONST INT  g_i_FONT_WIDTH = g_i_FONT_HEIGH * 2 / 5;
+
 CONST INT g_i_DISPLAY_WIDTH = g_i_BUTTON_SIZE * 5 + g_i_INTERVAL * 4;
-CONST INT g_i_DISPLAY_HEIGHT = 40;
+CONST INT g_i_DISPLAY_HEIGHT = g_i_FONT_HEIGH + 4;
 
 CONST INT g_i_START_X = 10;
 CONST INT g_i_START_Y = 10;
@@ -101,7 +104,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		AllocConsole();
 		freopen("CONOUT$", "w", stdout);
 
-		HWND hEdit = CreateWindowEx
+		CreateWindowEx
 		(
 			NULL, "Edit", "0",
 			WS_CHILD | WS_VISIBLE | WS_BORDER | ES_RIGHT,
@@ -110,22 +113,6 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			hwnd, (HMENU)IDC_EDIT_DISPLAY,
 			GetModuleHandle(NULL), NULL
 		);
-		AddFontResource("Font\\GROBOLDoutline.ttf");
-		HFONT hFont = CreateFont
-		(
-			g_i_DISPLAY_HEIGHT - 4, 8, 0, 0,
-			FW_NORMAL,
-			FALSE,
-			FALSE,
-			FALSE,
-			DEFAULT_CHARSET,
-			OUT_DEFAULT_PRECIS,
-			CLIP_DEFAULT_PRECIS,
-			DEFAULT_QUALITY,
-			DEFAULT_PITCH,
-			"GROBOLDoutline"
-		);
-		SendMessage(hEdit, WM_SETFONT, (WPARAM)hFont, TRUE);
 
 		CHAR sz_digit[2] = "0";
 		for (int i = 6; i >= 0; i -= 3)
@@ -133,7 +120,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			for (int j = 0; j < 3; j++)
 			{
 				sz_digit[0] = 49 + i + j;
-				HWND hButtonNumbers = CreateWindowEx
+				CreateWindowEx
 				(
 					NULL, "Button", sz_digit,
 					WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_BITMAP,
@@ -146,7 +133,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			}
 		}
 
-		HWND hButton0 = CreateWindowEx
+		CreateWindowEx
 		(
 			NULL, "Button", "0",
 			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_BITMAP,
@@ -157,7 +144,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			GetModuleHandle(NULL), NULL
 		);
 
-		HWND hButtonPoint = CreateWindowEx
+		CreateWindowEx
 		(
 			NULL, "Button", ".",
 			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_BITMAP,
@@ -170,7 +157,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 		for (int i = 0; i < 4; i++)
 		{
-			HWND hButtonOperation = CreateWindowEx
+			CreateWindowEx
 			(
 				NULL, "Button", g_OPERATIONS[i],
 				WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_BITMAP,
@@ -182,7 +169,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			);
 		}
 
-		HWND hButtonBsp = CreateWindowEx
+		CreateWindowEx
 		(
 			NULL, "Button", "<-",
 			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_BITMAP,
@@ -193,7 +180,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			GetModuleHandle(NULL), NULL
 		);
 
-		HWND hButtonClr = CreateWindowEx
+		CreateWindowEx
 		(
 			NULL, "Button", "C",
 			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_BITMAP,
@@ -204,7 +191,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			GetModuleHandle(NULL), NULL
 		);
 
-		HWND hButtonEqual = CreateWindowEx
+		CreateWindowEx
 		(
 			NULL, "Button", "=",
 			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_BITMAP,
@@ -215,7 +202,20 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			GetModuleHandle(NULL), NULL
 		);
 
-		SetSkin(hwnd, "square_blue", "GROBOLDoutline");
+		SetSkin(hwnd, "square_blue", "digital-7");
+	}
+	break;
+	case WM_CTLCOLOREDIT:
+	{
+		HDC hdc = (HDC)wParam;
+		HWND hEdit = (HWND)lParam;
+		if (GetDlgCtrlID(hEdit) == IDC_EDIT_DISPLAY)
+		{
+			SetTextColor(hdc, RGB(200, 200, 200));
+			SetBkColor(hdc, RGB(0, 0, 0));
+			HBRUSH hbrBackground = CreateSolidBrush(RGB(30, 30, 30));
+			return (INT_PTR)hbrBackground;
+		}
 	}
 	break;
 	case WM_COMMAND:
@@ -228,7 +228,6 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 		if (LOWORD(wParam) >= IDC_BUTTON_0 && LOWORD(wParam) <= IDC_BUTTON_9)
 		{
-			//TODO: Если первый символ '.', то последующий ввод неправильный
 			if (!input && !input_operation)
 			{
 				SendMessage(hwnd, WM_COMMAND, LOWORD(IDC_BUTTON_CLR), 0);
@@ -452,8 +451,8 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 		switch (TrackPopupMenu(hMenu, TPM_LEFTALIGN | TPM_BOTTOMALIGN | TPM_RETURNCMD, LOWORD(lParam), HIWORD(lParam), 0, hwnd, NULL))
 		{
-		case (IDR_SQUARE_BLUE): SetSkin(hwnd, "square_blue", "GROBOLDoutline"); break;
-		case (IDR_METAL_MISTRAL): SetSkin(hwnd, "metal_mistral", "HandWriting"); break;
+		case (IDR_SQUARE_BLUE): SetSkin(hwnd, "square_blue", "digital-7"); break;
+		case (IDR_METAL_MISTRAL): SetSkin(hwnd, "metal_mistral", "Calculator"); break;
 		case(IDR_EXIT): DestroyWindow(hwnd);
 		}
 
@@ -462,7 +461,12 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	}
 	break;
 	case WM_DESTROY:
-		PostQuitMessage(0);
+	{
+		HWND hEdit = GetDlgItem(hwnd, IDC_EDIT_DISPLAY);
+		HDC hdc = GetDC(hEdit);
+		ReleaseDC(hEdit, hdc);
+			PostQuitMessage(0);
+	}
 		break;
 	case WM_CLOSE:
 		DestroyWindow(hwnd);
@@ -526,19 +530,19 @@ VOID SetSkin(HWND hwnd, CONST CHAR* skin, CONST CHAR* font)
 
 	HWND hEditDisplay = GetDlgItem(hwnd, IDC_EDIT_DISPLAY);
 	sprintf(sz_filename, "Font\\%s.ttf", font);
-	AddFontResource(sz_filename);
+	AddFontResourceEx(sz_filename, FR_PRIVATE, 0);
 	HFONT hFont = CreateFont
 	(
-		g_i_DISPLAY_HEIGHT - 4, 10, 0, 0,
-		FW_NORMAL,
+		g_i_FONT_HEIGH, g_i_FONT_WIDTH, 0, 0,
+		FW_BOLD,
 		FALSE,
 		FALSE,
 		FALSE,
 		DEFAULT_CHARSET,
-		OUT_DEFAULT_PRECIS,
-		CLIP_DEFAULT_PRECIS,
-		DEFAULT_QUALITY,
-		DEFAULT_PITCH,
+		OUT_TT_PRECIS,
+		CLIP_TT_ALWAYS,
+		ANTIALIASED_QUALITY,
+		FF_DONTCARE,
 		font
 	);
 	SendMessage(hEditDisplay, WM_SETFONT, (WPARAM)hFont, TRUE);
