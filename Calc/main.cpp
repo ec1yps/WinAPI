@@ -234,7 +234,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				SendMessage(hwnd, WM_COMMAND, LOWORD(IDC_BUTTON_CLR), 0);
 				sz_display[0] = 0;
 			}
-			if (!input && input_operation) sz_display[0] = 0;
+			if (!input && input_operation && !strchr(sz_display, '.')) sz_display[0] = 0;
 
 			sz_digit[0] = LOWORD(wParam) - IDC_BUTTON_0 + '0';
 
@@ -504,11 +504,13 @@ VOID SetSkin(HWND hwnd, CONST CHAR* skin, CONST CHAR* font)
 	CHAR sz_filename[FILENAME_MAX]{};
 	CHAR sz_full_name[MAX_PATH]{};
 
+	system("cls");
+
 	for (int i = 0; i < 18; i++)
 	{
 		HWND hButton = GetDlgItem(hwnd, IDC_BUTTON_0 + i);
 		sprintf(sz_filename, "ButtonsBMP\\%s\\%s.bmp", skin, g_BUTTON_FILENAME[i]);
-		std::cout << sz_filename[i] << std::endl;
+		std::cout << sz_filename << std::endl;
 		HBITMAP bmpButton = (HBITMAP)LoadImage
 		(
 			GetModuleHandle(NULL),
