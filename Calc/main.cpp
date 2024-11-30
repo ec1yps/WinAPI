@@ -97,6 +97,10 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	static BOOL input = FALSE;
 	static BOOL input_operation = FALSE;
 
+	static COLORREF backgroundColor = RGB(0, 0, 75);
+	static COLORREF textColor = RGB(255, 255, 255);
+	static COLORREF editColor = RGB(0, 0, 150);
+
 	switch (uMsg)
 	{
 	case WM_CREATE:
@@ -205,14 +209,28 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		SetSkin(hwnd, "square_blue", "digital-7");
 	}
 	break;
+	case WM_PAINT:
+	{
+		PAINTSTRUCT ps;
+		HDC hdc = BeginPaint(hwnd, &ps);
+
+		HBRUSH hBrush = CreateSolidBrush(backgroundColor);
+		FillRect(hdc, &ps.rcPaint, hBrush);
+
+		DeleteObject(hBrush);
+		EndPaint(hwnd, &ps);
+	}
+	break;
 	case WM_CTLCOLOREDIT:
 	{
 		HDC hdc = (HDC)wParam;
 		HWND hEdit = (HWND)lParam;
+
 		if (GetDlgCtrlID(hEdit) == IDC_EDIT_DISPLAY)
 		{
-			SetTextColor(hdc, RGB(200, 200, 200));
-			SetBkColor(hdc, RGB(0, 0, 0));
+			SetTextColor(hdc, textColor);
+			SetBkColor(hdc, editColor);
+
 			HBRUSH hbrBackground = CreateSolidBrush(RGB(30, 30, 30));
 			return (INT_PTR)hbrBackground;
 		}
@@ -451,8 +469,24 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 		switch (TrackPopupMenu(hMenu, TPM_LEFTALIGN | TPM_BOTTOMALIGN | TPM_RETURNCMD, LOWORD(lParam), HIWORD(lParam), 0, hwnd, NULL))
 		{
-		case (IDR_SQUARE_BLUE): SetSkin(hwnd, "square_blue", "digital-7"); break;
-		case (IDR_METAL_MISTRAL): SetSkin(hwnd, "metal_mistral", "Calculator"); break;
+		case (IDR_SQUARE_BLUE):
+		{
+			backgroundColor = RGB(0, 0, 75);
+			textColor = RGB(255, 255, 255);
+			editColor = RGB(0, 0, 150);
+			SetSkin(hwnd, "square_blue", "digital-7");
+			InvalidateRect(hwnd, NULL, TRUE);
+		}
+		break;
+		case (IDR_METAL_MISTRAL):
+		{
+			backgroundColor = RGB(50, 50, 50);
+			textColor = RGB(0, 255, 0);
+			editColor = RGB(100, 100, 100);
+			SetSkin(hwnd, "metal_mistral", "Calculator");
+			InvalidateRect(hwnd, NULL, TRUE);
+		}
+		break;
 		case(IDR_EXIT): DestroyWindow(hwnd);
 		}
 
@@ -465,9 +499,9 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		HWND hEdit = GetDlgItem(hwnd, IDC_EDIT_DISPLAY);
 		HDC hdc = GetDC(hEdit);
 		ReleaseDC(hEdit, hdc);
-			PostQuitMessage(0);
+		PostQuitMessage(0);
 	}
-		break;
+	break;
 	case WM_CLOSE:
 		DestroyWindow(hwnd);
 		break;
