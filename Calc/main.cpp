@@ -29,6 +29,11 @@ CONST INT g_i_WINDOW_HEIGHT = g_i_DISPLAY_HEIGHT + g_i_START_Y * 2 + (g_i_BUTTON
 
 CONST CHAR* g_OPERATIONS[] = { "+", "-", "*", "/" };
 
+CONST COLORREF g_DISPLAY_BACKGROUND[] = { RGB(0, 0, 150), RGB(100, 100, 100) };
+CONST COLORREF g_DISPLAY_FOREGROUND[] = { RGB(255, 255, 255), RGB(0, 255, 0) };
+CONST COLORREF g_WINDOW_BACKGROUND[] = { RGB(0, 0, 75), RGB(50, 50, 50) };
+
+
 CHAR* GetFileName(CHAR* resource);
 VOID SetSkin(HWND hwnd, CONST CHAR* skin, CONST CHAR* font);
 
@@ -50,6 +55,9 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 	wClass.hIconSm = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON1));
 	wClass.hCursor = LoadCursor(hInstance, IDC_ARROW);
 	wClass.hbrBackground = (HBRUSH)COLOR_WINDOW;
+	//HBITMAP hBackground = (HBITMAP)LoadImage(hInstance, "Picture\\wolf.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+	//wClass.hbrBackground = CreatePatternBrush(hBackground);
+
 
 	wClass.hInstance = hInstance;
 	wClass.lpszClassName = g_sz_CLASS_NAME;
@@ -97,9 +105,11 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	static BOOL input = FALSE;
 	static BOOL input_operation = FALSE;
 
-	static COLORREF backgroundColor = RGB(0, 0, 75);
-	static COLORREF textColor = RGB(255, 255, 255);
-	static COLORREF editColor = RGB(0, 0, 150);
+	//static COLORREF backgroundColor = RGB(0, 0, 75);
+	//static COLORREF textColor = RGB(255, 255, 255);
+	//static COLORREF editColor = RGB(0, 0, 150);
+	
+	static INT color_index = 0;
 
 	switch (uMsg)
 	{
@@ -209,7 +219,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		SetSkin(hwnd, "square_blue", "digital-7");
 	}
 	break;
-	case WM_PAINT:
+	/*case WM_PAINT:
 	{
 		PAINTSTRUCT ps;
 		HDC hdc = BeginPaint(hwnd, &ps);
@@ -220,7 +230,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		DeleteObject(hBrush);
 		EndPaint(hwnd, &ps);
 	}
-	break;
+	break;*/
 	case WM_CTLCOLOREDIT:
 	{
 		HDC hdc = (HDC)wParam;
@@ -228,11 +238,13 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 		if (GetDlgCtrlID(hEdit) == IDC_EDIT_DISPLAY)
 		{
-			SetTextColor(hdc, textColor);
-			SetBkColor(hdc, editColor);
+			SetTextColor(hdc, g_DISPLAY_FOREGROUND[color_index]);
+			SetBkColor(hdc, g_DISPLAY_BACKGROUND[color_index]);
 
-			HBRUSH hbrBackground = CreateSolidBrush(RGB(30, 30, 30));
-			return (INT_PTR)hbrBackground;
+			HBRUSH hbrBackground = CreateSolidBrush(g_WINDOW_BACKGROUND[color_index]);
+			SetClassLongPtr(hwnd, GCLP_HBRBACKGROUND, (LONG)hbrBackground);
+			SendMessage(hwnd, WM_ERASEBKGND, wParam, 0);
+			return (LRESULT)hbrBackground;
 		}
 	}
 	break;
@@ -467,31 +479,38 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		InsertMenu(hMenu, 1, MF_BYPOSITION | MF_SEPARATOR, 0, 0);
 		InsertMenu(hMenu, 2, MF_BYPOSITION | MF_STRING, IDR_EXIT, "Exit");
 
-		switch (TrackPopupMenu(hMenu, TPM_LEFTALIGN | TPM_BOTTOMALIGN | TPM_RETURNCMD, LOWORD(lParam), HIWORD(lParam), 0, hwnd, NULL))
+		BOOL skin_index = TrackPopupMenu(hMenu, TPM_LEFTALIGN | TPM_BOTTOMALIGN | TPM_RETURNCMD, LOWORD(lParam), HIWORD(lParam), 0, hwnd, NULL);
+		switch (skin_index)
 		{
-		case (IDR_SQUARE_BLUE):
+		case IDR_SQUARE_BLUE:
 		{
-			backgroundColor = RGB(0, 0, 75);
-			textColor = RGB(255, 255, 255);
-			editColor = RGB(0, 0, 150);
+			//backgroundColor = RGB(0, 0, 75);
+			//textColor = RGB(255, 255, 255);
+			//editColor = RGB(0, 0, 150);
+			//InvalidateRect(hwnd, NULL, TRUE);
 			SetSkin(hwnd, "square_blue", "digital-7");
-			InvalidateRect(hwnd, NULL, TRUE);
 		}
 		break;
-		case (IDR_METAL_MISTRAL):
+		case IDR_METAL_MISTRAL:
 		{
-			backgroundColor = RGB(50, 50, 50);
-			textColor = RGB(0, 255, 0);
-			editColor = RGB(100, 100, 100);
+			//backgroundColor = RGB(50, 50, 50);
+			//textColor = RGB(0, 255, 0);
+			//editColor = RGB(100, 100, 100);
+			//InvalidateRect(hwnd, NULL, TRUE);
 			SetSkin(hwnd, "metal_mistral", "Calculator");
-			InvalidateRect(hwnd, NULL, TRUE);
 		}
 		break;
-		case(IDR_EXIT): DestroyWindow(hwnd);
+		case IDR_EXIT: DestroyWindow(hwnd);
 		}
 
 		DestroyMenu(hSubmenuSkins);
 		DestroyMenu(hMenu);
+
+		color_index = skin_index - IDR_CONTEXT_MENU - 1;
+		HWND hEditDisplay = GetDlgItem(hwnd, IDC_EDIT_DISPLAY);
+		HDC hdcDisplay = GetDC(hEditDisplay);
+		SendMessage(hwnd, WM_CTLCOLOREDIT, (WPARAM)hdcDisplay, (LPARAM)hEditDisplay);
+		ReleaseDC(hEditDisplay, hdcDisplay);
 	}
 	break;
 	case WM_DESTROY:
