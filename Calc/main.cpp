@@ -35,7 +35,9 @@ CONST COLORREF g_WINDOW_BACKGROUND[] = { RGB(0, 0, 75), RGB(50, 50, 50) };
 
 
 CHAR* GetFileName(CHAR* resource);
-VOID SetSkin(HWND hwnd, CONST CHAR* skin, CONST CHAR* font);
+VOID SetSkin(HWND hwnd, CONST CHAR* skin);
+VOID SetFont(HWND hwnd, CONST CHAR* font);
+VOID SetSkinFromDLL(HWND hwnd, CONST CHAR* skin);
 
 INT ButtonPressedRelease(HWND hwnd, WPARAM wParam);
 
@@ -216,7 +218,9 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			GetModuleHandle(NULL), NULL
 		);
 
-		SetSkin(hwnd, "square_blue", "digital-7");
+		//SetSkin(hwnd, "square_blue");
+		SetSkinFromDLL(hwnd, "square_blue");
+		SetFont(hwnd, "digital-7");
 	}
 	break;
 	/*case WM_PAINT:
@@ -488,16 +492,20 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			//textColor = RGB(255, 255, 255);
 			//editColor = RGB(0, 0, 150);
 			//InvalidateRect(hwnd, NULL, TRUE);
-			SetSkin(hwnd, "square_blue", "digital-7");
+			//SetSkin(hwnd, "square_blue");
+			SetSkinFromDLL(hwnd, "square_blue");
+			SetFont(hwnd, "digital-7");
 		}
 		break;
 		case IDR_METAL_MISTRAL:
 		{
-			//backgroundColor = RGB(50, 50, 50);
+			//backgro'undColor = RGB(50, 50, 50);
 			//textColor = RGB(0, 255, 0);
 			//editColor = RGB(100, 100, 100);
 			//InvalidateRect(hwnd, NULL, TRUE);
-			SetSkin(hwnd, "metal_mistral", "Calculator");
+			//SetSkin(hwnd, "metal_mistral");
+			SetSkinFromDLL(hwnd, "metal_mistral");
+			SetFont(hwnd, "Calculator");
 		}
 		break;
 		case IDR_EXIT: DestroyWindow(hwnd);
@@ -559,7 +567,7 @@ CONST CHAR* g_BUTTON_FILENAME[] =
 "button_equal",
 };
 
-VOID SetSkin(HWND hwnd, CONST CHAR* skin, CONST CHAR* font)
+VOID SetSkin(HWND hwnd, CONST CHAR* skin)
 {
 	CHAR sz_path[MAX_PATH]{};
 	CHAR sz_filename[FILENAME_MAX]{};
@@ -583,10 +591,14 @@ VOID SetSkin(HWND hwnd, CONST CHAR* skin, CONST CHAR* font)
 		);
 		SendMessage(hButton, BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)bmpButton);
 	}
+}
 
+VOID SetFont(HWND hwnd, CONST CHAR* font)
+{
+	CHAR sz_fontname[FILENAME_MAX]{};
 	HWND hEditDisplay = GetDlgItem(hwnd, IDC_EDIT_DISPLAY);
-	sprintf(sz_filename, "Font\\%s.ttf", font);
-	AddFontResourceEx(sz_filename, FR_PRIVATE, 0);
+	sprintf(sz_fontname, "Font\\%s.ttf", font);
+	AddFontResourceEx(sz_fontname, FR_PRIVATE, 0);
 	HFONT hFont = CreateFont
 	(
 		g_i_FONT_HEIGH, g_i_FONT_WIDTH, 0, 0,
@@ -602,6 +614,29 @@ VOID SetSkin(HWND hwnd, CONST CHAR* skin, CONST CHAR* font)
 		font
 	);
 	SendMessage(hEditDisplay, WM_SETFONT, (WPARAM)hFont, TRUE);
+}
+
+VOID SetSkinFromDLL(HWND hwnd, CONST CHAR* skin)
+{
+	CHAR filename[MAX_PATH]{};
+	sprintf(filename, "ButtonsBMP\\%s.dll", skin);
+	HMODULE hInst = LoadLibrary(filename);
+
+	for (int i = IDC_BUTTON_0; i <= IDC_BUTTON_EQUAL; i++)
+	{
+		HBITMAP buttonBMP = (HBITMAP)LoadImage
+		(
+			hInst,
+			MAKEINTRESOURCE(i),
+			IMAGE_BITMAP,
+			i > IDC_BUTTON_0 ? g_i_BUTTON_SIZE : g_i_BUTTON_DOUBLE_SIZE,
+			i < IDC_BUTTON_EQUAL ? g_i_BUTTON_SIZE : g_i_BUTTON_DOUBLE_SIZE,
+			NULL
+		);
+		SendMessage(GetDlgItem(hwnd, i), BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)buttonBMP);
+	}
+
+	FreeLibrary(hInst);
 }
 
 INT ButtonPressedRelease(HWND hwnd, WPARAM wParam)
