@@ -25,62 +25,11 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="ButtonsBMP\metal_mistral\button_0.bmp">
+    <None Include="font1.bin">
       <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="ButtonsBMP\metal_mistral\button_1.bmp">
+    </None>
+    <None Include="font2.bin">
       <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="ButtonsBMP\metal_mistral\button_2.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="ButtonsBMP\metal_mistral\button_3.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="ButtonsBMP\metal_mistral\button_4.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="ButtonsBMP\metal_mistral\button_5.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="ButtonsBMP\metal_mistral\button_6.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="ButtonsBMP\metal_mistral\button_7.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="ButtonsBMP\metal_mistral\button_8.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="ButtonsBMP\metal_mistral\button_9.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="ButtonsBMP\metal_mistral\button_aster.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="ButtonsBMP\metal_mistral\button_bsp.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="ButtonsBMP\metal_mistral\button_clr.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="ButtonsBMP\metal_mistral\button_equal.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="ButtonsBMP\metal_mistral\button_minus.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="ButtonsBMP\metal_mistral\button_plus.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="ButtonsBMP\metal_mistral\button_point.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="ButtonsBMP\metal_mistral\button_slash.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="ICO\calc_calculator_10824.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
+    </None>
   </ItemGroup>
 </Project>

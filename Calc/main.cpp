@@ -38,6 +38,7 @@ CHAR* GetFileName(CHAR* resource);
 VOID SetSkin(HWND hwnd, CONST CHAR* skin);
 VOID SetFont(HWND hwnd, CONST CHAR* font);
 VOID SetSkinFromDLL(HWND hwnd, CONST CHAR* skin);
+VOID SetIconFromDLL(HWND hwnd, CONST CHAR* icon_name);
 
 INT ButtonPressedRelease(HWND hwnd, WPARAM wParam);
 
@@ -53,13 +54,12 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 	wClass.cbClsExtra = 0;
 	wClass.cbWndExtra = 0;
 
-	wClass.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON1));
-	wClass.hIconSm = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON1));
+	wClass.hIcon = LoadIcon(hInstance, IDI_APPLICATION);
+	wClass.hIconSm = LoadIcon(hInstance, IDI_APPLICATION);
 	wClass.hCursor = LoadCursor(hInstance, IDC_ARROW);
 	wClass.hbrBackground = (HBRUSH)COLOR_WINDOW;
 	//HBITMAP hBackground = (HBITMAP)LoadImage(hInstance, "Picture\\wolf.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
 	//wClass.hbrBackground = CreatePatternBrush(hBackground);
-
 
 	wClass.hInstance = hInstance;
 	wClass.lpszClassName = g_sz_CLASS_NAME;
@@ -117,7 +117,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_CREATE:
 	{
-		AllocConsole();
+		//AllocConsole();
 		freopen("CONOUT$", "w", stdout);
 
 		CreateWindowEx
@@ -221,6 +221,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		//SetSkin(hwnd, "square_blue");
 		SetSkinFromDLL(hwnd, "square_blue");
 		SetFont(hwnd, "digital-7");
+		SetIconFromDLL(hwnd, "icon");
 	}
 	break;
 	/*case WM_PAINT:
@@ -635,6 +636,20 @@ VOID SetSkinFromDLL(HWND hwnd, CONST CHAR* skin)
 		);
 		SendMessage(GetDlgItem(hwnd, i), BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)buttonBMP);
 	}
+
+	FreeLibrary(hInst);
+}
+
+VOID SetIconFromDLL(HWND hwnd, CONST CHAR* icon_name)
+{
+	CHAR filename[MAX_PATH]{};
+	sprintf(filename, "ICO\\%s.dll", icon_name);
+	HMODULE hInst = LoadLibrary(filename);
+
+	HICON hIcon = LoadIcon(hInst, MAKEINTRESOURCE(IDI_ICON1));
+
+	SendMessage(hwnd, WM_SETICON, ICON_BIG, (LPARAM)hIcon);
+	//SetClassLongPtr(hwnd, GCLP_HICON, (LONG)hIcon);
 
 	FreeLibrary(hInst);
 }
