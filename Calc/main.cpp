@@ -1,7 +1,10 @@
 ﻿#define _CRT_SECURE_NO_WARNINGS
 #include <Windows.h>
 #include <iostream>
+#include <Shlwapi.h>
 #include "resource.h"
+
+#pragma comment (lib, "Shlwapi.lib")
 
 CONST CHAR g_sz_CLASS_NAME[] = "Calc PV_319";
 
@@ -41,6 +44,8 @@ VOID SetSkinFromDLL(HWND hwnd, CONST CHAR* skin);
 VOID SetIconFromDLL(HWND hwnd, CONST CHAR* icon_name);
 VOID SetFontFromDLL(HWND hwnd, CONST CHAR* font);
 
+VOID GetExeDirectory(CHAR* buffer, DWORD size);
+
 INT ButtonPressedRelease(HWND hwnd, WPARAM wParam);
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -55,8 +60,8 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 	wClass.cbClsExtra = 0;
 	wClass.cbWndExtra = 0;
 
-	wClass.hIcon = LoadIcon(hInstance, IDI_APPLICATION);
-	wClass.hIconSm = LoadIcon(hInstance, IDI_APPLICATION);
+	wClass.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON2));
+	wClass.hIconSm = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON2));
 	wClass.hCursor = LoadCursor(hInstance, IDC_ARROW);
 	wClass.hbrBackground = (HBRUSH)COLOR_WINDOW;
 	//HBITMAP hBackground = (HBITMAP)LoadImage(hInstance, "Picture\\wolf.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
@@ -132,7 +137,12 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			GetModuleHandle(NULL), NULL
 		);
 
-		HINSTANCE hInstFont = LoadLibrary("D:\\surce\\repos\\WinAPI\\Calc\\Font\\Digital-7.dll");
+		CHAR filepath[MAX_PATH]{};
+		GetExeDirectory(filepath, MAX_PATH);
+		CHAR dllpath[MAX_PATH]{};
+		PathCombine(dllpath, filepath, "Fonts\\Digital-7.dll");
+
+		HINSTANCE hInstFont = LoadLibrary(dllpath);
 		HRSRC hFontRes = FindResource(hInstFont, MAKEINTRESOURCE(99), "BINARY");
 		HGLOBAL hFntMem = LoadResource(hInstFont, hFontRes);
 		VOID* fntDara = LockResource(hFntMem);
@@ -249,7 +259,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 		SetSkinFromDLL(hwnd, "square_blue");
 		//SetFontFromDLL(hwnd, "Digital-7");
-		SetIconFromDLL(hwnd, "icon");
+		//SetIconFromDLL(hwnd, "icon");
 	}
 	break;
 	/*case WM_PAINT:
@@ -689,8 +699,10 @@ VOID SetFontFromDLL(HWND hwnd, CONST CHAR* font)
 
 VOID SetSkinFromDLL(HWND hwnd, CONST CHAR* skin)
 {
+	CHAR filepath[MAX_PATH]{};
 	CHAR filename[MAX_PATH]{};
-	sprintf(filename, "D:\\surce\\repos\\WinAPI\\Calc\\ButtonsBMP\\%s.dll", skin);
+	GetExeDirectory(filepath, MAX_PATH);
+	sprintf(filename, "%s\\ButtonsBMP\\%s.dll", filepath, skin);
 	HMODULE hInst = LoadLibrary(filename);
 
 	for (int i = IDC_BUTTON_0; i <= IDC_BUTTON_EQUAL; i++)
@@ -776,4 +788,10 @@ INT ButtonPressedRelease(HWND hwnd, WPARAM wParam)
 		return LOWORD(IDC_BUTTON_SLASH);
 		break;
 	}
+}
+
+VOID GetExeDirectory(CHAR* buffer, DWORD size)
+{
+	GetModuleFileName(NULL, buffer, size);
+	PathRemoveFileSpec(buffer);
 }

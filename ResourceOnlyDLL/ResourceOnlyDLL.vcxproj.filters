@@ -25,11 +25,59 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="font1.bin">
+    <Image Include="..\Calc\ButtonsBMP\square_blue\button_0.bmp">
       <Filter>Resource Files</Filter>
-    </None>
-    <None Include="font2.bin">
+    </Image>
+    <Image Include="..\Calc\ButtonsBMP\square_blue\button_1.bmp">
       <Filter>Resource Files</Filter>
-    </None>
+    </Image>
+    <Image Include="..\Calc\ButtonsBMP\square_blue\button_2.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\Calc\ButtonsBMP\square_blue\button_3.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\Calc\ButtonsBMP\square_blue\button_4.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\Calc\ButtonsBMP\square_blue\button_5.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\Calc\ButtonsBMP\square_blue\button_6.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\Calc\ButtonsBMP\square_blue\button_7.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\Calc\ButtonsBMP\square_blue\button_8.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\Calc\ButtonsBMP\square_blue\button_9.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\Calc\ButtonsBMP\square_blue\button_aster.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\Calc\ButtonsBMP\square_blue\button_bsp.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\Calc\ButtonsBMP\square_blue\button_clr.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\Calc\ButtonsBMP\square_blue\button_equal.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\Calc\ButtonsBMP\square_blue\button_minus.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\Calc\ButtonsBMP\square_blue\button_plus.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\Calc\ButtonsBMP\square_blue\button_point.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\Calc\ButtonsBMP\square_blue\button_slash.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
