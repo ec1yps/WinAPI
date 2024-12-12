@@ -113,12 +113,11 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	static BOOL input = FALSE;
 	static BOOL input_operation = FALSE;
 
-	//static COLORREF backgroundColor = RGB(0, 0, 75);
-	//static COLORREF textColor = RGB(255, 255, 255);
-	//static COLORREF editColor = RGB(0, 0, 150);
-
 	static INT color_index = 0;
 	static HANDLE hMyFont = NULL;
+
+	static BOOL mOptionsChecked = TRUE;
+	static INT menu_item_index = 0;
 
 	switch (uMsg)
 	{
@@ -318,7 +317,6 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)sz_display);
 
 			input = TRUE;
-			//input_operation = FALSE;
 		}
 
 		if (LOWORD(wParam) == IDC_BUTTON_POINT)
@@ -334,8 +332,6 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			input = TRUE;
 			SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)sz_display);
 		}
-
-		//if (LOWORD(wParam) == IDC_EDIT_DISPLAY && HIWORD(wParam) == EN_SETFOCUS) SetFocus(hwnd);
 
 		if (LOWORD(wParam) == IDC_BUTTON_BSP)
 		{
@@ -358,7 +354,6 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		if (LOWORD(wParam) >= IDC_BUTTON_PLUS && LOWORD(wParam) <= IDC_BUTTON_SLASH)
 		{
 			if (a == DBL_MIN) a = atof(sz_display);
-			//else b = atof(sz_display);
 			if (input_operation) SendMessage(hwnd, WM_COMMAND, LOWORD(IDC_BUTTON_EQUAL), 0);
 			operation = LOWORD(wParam);
 			input = FALSE;
@@ -391,159 +386,52 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_KEYDOWN:
 	{
 		SendMessage(GetDlgItem(hwnd, ButtonPressedRelease(hwnd, wParam)), BM_SETSTATE, TRUE, 0);
-		/*if (GetKeyState(VK_SHIFT) < 0)
-		{
-			if (wParam == 0x38) SendMessage(GetDlgItem(hwnd, IDC_BUTTON_ASTER), BM_SETSTATE, TRUE, 0);
-		}
-		else if (wParam >= '0' && wParam <= '9')
-		{
-			SendMessage(GetDlgItem(hwnd, wParam - '0' + IDC_BUTTON_0), BM_SETSTATE, TRUE, 0);
-		}
-		else if (wParam >= 0x60 && wParam <= 0x69)
-		{
-			SendMessage(GetDlgItem(hwnd, wParam - 0x60 + IDC_BUTTON_0), BM_SETSTATE, TRUE, 0);
-		}
-
-		switch (wParam)
-		{
-		case VK_DECIMAL:
-		case VK_OEM_PERIOD:
-			SendMessage(GetDlgItem(hwnd, IDC_BUTTON_POINT), BM_SETSTATE, TRUE, 0);
-			break;
-		case VK_BACK:
-			SendMessage(GetDlgItem(hwnd, IDC_BUTTON_BSP), BM_SETSTATE, TRUE, 0);
-			break;
-		case VK_ESCAPE:
-			SendMessage(GetDlgItem(hwnd, IDC_BUTTON_CLR), BM_SETSTATE, TRUE, 0);
-			break;
-		case VK_RETURN:
-			SendMessage(GetDlgItem(hwnd, IDC_BUTTON_EQUAL), BM_SETSTATE, TRUE, 0);
-			break;
-
-		case VK_ADD:
-		case VK_OEM_PLUS:
-			SendMessage(GetDlgItem(hwnd, IDC_BUTTON_PLUS), BM_SETSTATE, TRUE, 0);
-			break;
-		case VK_SUBTRACT:
-		case VK_OEM_MINUS:
-			SendMessage(GetDlgItem(hwnd, IDC_BUTTON_MINUS), BM_SETSTATE, TRUE, 0);
-			break;
-		case VK_MULTIPLY:
-			SendMessage(GetDlgItem(hwnd, IDC_BUTTON_ASTER), BM_SETSTATE, TRUE, 0);
-			break;
-		case VK_DIVIDE:
-		case VK_OEM_2:
-			SendMessage(GetDlgItem(hwnd, IDC_BUTTON_SLASH), BM_SETSTATE, TRUE, 0);
-			break;
-		}*/
 	}
 	break;
 	case WM_KEYUP:
 	{
 		SendMessage(GetDlgItem(hwnd, ButtonPressedRelease(hwnd, wParam)), BM_SETSTATE, FALSE, 0);
 		SendMessage(hwnd, WM_COMMAND, ButtonPressedRelease(hwnd, wParam), 0);
-		/*if (GetKeyState(VK_SHIFT) < 0)
-		{
-			if (wParam == 0x38)
-			{
-				SendMessage(GetDlgItem(hwnd, IDC_BUTTON_ASTER), BM_SETSTATE, FALSE, 0);
-				SendMessage(hwnd, WM_COMMAND, IDC_BUTTON_ASTER, 0);
-			}
-		}
-
-		else if (wParam >= 0x30 && wParam <= 0x39)
-		{
-			SendMessage(GetDlgItem(hwnd, wParam - '0' + IDC_BUTTON_0), BM_SETSTATE, FALSE, 0);
-			SendMessage(hwnd, WM_COMMAND, wParam - 0x30 + IDC_BUTTON_0, 0);
-		}
-
-		else if (wParam >= 0x60 && wParam <= 0x69)
-		{
-			SendMessage(GetDlgItem(hwnd, wParam - 0x60 + IDC_BUTTON_0), BM_SETSTATE, FALSE, 0);
-			SendMessage(hwnd, WM_COMMAND, wParam - 0x60 + IDC_BUTTON_0, 0);
-		}
-
-		switch (wParam)
-		{
-		case VK_DECIMAL:
-		case VK_OEM_PERIOD:
-			SendMessage(hwnd, WM_COMMAND, LOWORD(IDC_BUTTON_POINT), 0);
-			SendMessage(GetDlgItem(hwnd, IDC_BUTTON_POINT), BM_SETSTATE, FALSE, 0);
-			break;
-		case VK_BACK:
-			SendMessage(hwnd, WM_COMMAND, LOWORD(IDC_BUTTON_BSP), 0);
-			SendMessage(GetDlgItem(hwnd, IDC_BUTTON_BSP), BM_SETSTATE, FALSE, 0);
-			break;
-		case VK_ESCAPE:
-			SendMessage(hwnd, WM_COMMAND, LOWORD(IDC_BUTTON_CLR), 0);
-			SendMessage(GetDlgItem(hwnd, IDC_BUTTON_CLR), BM_SETSTATE, FALSE, 0);
-			break;
-		case VK_RETURN:
-			SendMessage(hwnd, WM_COMMAND, LOWORD(IDC_BUTTON_EQUAL), 0);
-			SendMessage(GetDlgItem(hwnd, IDC_BUTTON_EQUAL), BM_SETSTATE, FALSE, 0);
-			break;
-
-		case VK_ADD:
-		case VK_OEM_PLUS:
-			SendMessage(hwnd, WM_COMMAND, LOWORD(IDC_BUTTON_PLUS), 0);
-			SendMessage(GetDlgItem(hwnd, IDC_BUTTON_PLUS), BM_SETSTATE, FALSE, 0);
-			break;
-		case VK_SUBTRACT:
-		case VK_OEM_MINUS:
-			SendMessage(hwnd, WM_COMMAND, LOWORD(IDC_BUTTON_MINUS), 0);
-			SendMessage(GetDlgItem(hwnd, IDC_BUTTON_MINUS), BM_SETSTATE, FALSE, 0);
-			break;
-		case VK_MULTIPLY:
-			SendMessage(hwnd, WM_COMMAND, LOWORD(IDC_BUTTON_ASTER), 0);
-			SendMessage(GetDlgItem(hwnd, IDC_BUTTON_ASTER), BM_SETSTATE, FALSE, 0);
-			break;
-		case VK_DIVIDE:
-		case VK_OEM_2:
-			SendMessage(hwnd, WM_COMMAND, LOWORD(IDC_BUTTON_SLASH), 0);
-			SendMessage(GetDlgItem(hwnd, IDC_BUTTON_SLASH), BM_SETSTATE, FALSE, 0);
-			break;
-		}*/
 	}
 	break;
 	case WM_CONTEXTMENU:
 	{
 		HMENU hMenu = CreatePopupMenu();
 		HMENU hSubmenuSkins = CreatePopupMenu();
-		/*POINT cursor;
-		GetCursorPos(&cursor);
-		AppendMenu(hMenu, MFT_STRING, IDR_SQUARE_BLUE, "square_blue style");
-		AppendMenu(hMenu, MFT_STRING, IDR_METAL_MISTRAL, "metal_mistral style");
-		TrackPopupMenu(hMenu, TPM_RIGHTBUTTON, cursor.x, cursor.y, 0, hwnd, NULL);*/
 
-		InsertMenu(hSubmenuSkins, 0, MF_BYPOSITION | MF_STRING, IDR_METAL_MISTRAL, "Metal Mistral");
 		InsertMenu(hSubmenuSkins, 0, MF_BYPOSITION | MF_STRING, IDR_SQUARE_BLUE, "Square Blue");
+		InsertMenu(hSubmenuSkins, 1, MF_BYPOSITION | MF_STRING, IDR_METAL_MISTRAL, "Metal Mistral");
 
 		InsertMenu(hMenu, 0, MF_BYPOSITION | MF_POPUP, (UINT_PTR)hSubmenuSkins, "Skins");
 		InsertMenu(hMenu, 1, MF_BYPOSITION | MF_SEPARATOR, 0, 0);
 		InsertMenu(hMenu, 2, MF_BYPOSITION | MF_STRING, IDR_EXIT, "Exit");
+
+		if (hMenu)
+		{
+			if (hSubmenuSkins)
+			{
+				SetForegroundWindow(hwnd);
+
+				MENUITEMINFO mi = { 0 };
+				mi.cbSize = sizeof(MENUITEMINFO);
+				mi.fMask = MIIM_STATE;
+				mi.fState = MFS_CHECKED;
+				SetMenuItemInfo(hSubmenuSkins, menu_item_index, MFS_CHECKED, &mi);
+			}
+		}
 
 		BOOL skin_index = TrackPopupMenu(hMenu, TPM_LEFTALIGN | TPM_BOTTOMALIGN | TPM_RETURNCMD, LOWORD(lParam), HIWORD(lParam), 0, hwnd, NULL);
 		switch (skin_index)
 		{
 		case IDR_SQUARE_BLUE:
 		{
-			//backgroundColor = RGB(0, 0, 75);
-			//textColor = RGB(255, 255, 255);
-			//editColor = RGB(0, 0, 150);
-			//InvalidateRect(hwnd, NULL, TRUE);
-			//SetSkin(hwnd, "square_blue");
-			//SetFont(hwnd, "digital-7");
+			menu_item_index = 0;
 			SetSkinFromDLL(hwnd, "square_blue");
 		}
 		break;
 		case IDR_METAL_MISTRAL:
 		{
-			//backgroundColor = RGB(50, 50, 50);
-			//textColor = RGB(0, 255, 0);
-			//editColor = RGB(100, 100, 100);
-			//InvalidateRect(hwnd, NULL, TRUE);
-			//SetSkin(hwnd, "metal_mistral");
-			//SetFont(hwnd, "Calculator");
+			menu_item_index = 1;
 			SetSkinFromDLL(hwnd, "metal_mistral");
 		}
 		break;
